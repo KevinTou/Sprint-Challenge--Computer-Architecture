@@ -78,13 +78,19 @@ class CPU:
             self.reg[self.SP] += 1
 
         def JMP(operand_a, operand_b):
-            pass
+            self.pc = self.reg[operand_a]
 
         def JEQ(operand_a, operand_b):
-            pass
+            if bin(self.fl)[-1] == '1':
+                JMP(operand_a, operand_b)
+            else:
+                self.pc += 2
 
         def JNE(operand_a, operand_b):
-            pass
+            if bin(self.fl)[-1] == '0':
+                JMP(operand_a, operand_b)
+            else:
+                self.pc += 2
 
         # Calls on ALU
         def MUL(operand_a, operand_b):
@@ -229,7 +235,7 @@ class CPU:
         """Run the CPU."""
         # Start running the CPU
         while self.running:
-            self.trace()
+            # self.trace() # Used to debug
             # Get the first set of instructions
             # Instruction Register (IR)
             ir = self.ram_read(self.pc)
