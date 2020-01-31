@@ -100,7 +100,8 @@ class CPU:
             self.pc += 3
 
         def CMP(operand_a, operand_b):
-            pass
+            self.alu('CMP', operand_a, operand_b)
+            self.pc += 3
 
         # Used to stop running CPU
         def HLT(operand_a, operand_b):
@@ -160,7 +161,19 @@ class CPU:
             self.reg[reg_a] -= self.reg[reg_b]
 
         def CMP(reg_a, reg_b):
-            pass
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            compared_value = a - b
+
+            if compared_value > 0:
+                self.fl = 0b00000010
+            elif compared_value < 0:
+                self.fl = 0b00000100
+            elif compared_value == 0:
+                self.fl = 0b00000001
+            else:
+                self.fl = 0b00000000
 
         alu_opcodes = {
             'ADD': ADD,
