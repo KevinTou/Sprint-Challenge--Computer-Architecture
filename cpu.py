@@ -109,6 +109,34 @@ class CPU:
             self.alu('CMP', operand_a, operand_b)
             self.pc += 3
 
+        def AND(operand_a, operand_b):
+            self.alu('AND', operand_a, operand_b)
+            self.pc += 3
+
+        def OR(operand_a, operand_b):
+            self.alu('OR', operand_a, operand_b)
+            self.pc += 3
+
+        def XOR(operand_a, operand_b):
+            self.alu('XOR', operand_a, operand_b)
+            self.pc += 3
+
+        def NOT(operand_a, operand_b):
+            self.alu('NOT', operand_a, operand_b)
+            self.pc += 2
+
+        def SHL(operand_a, operand_b):
+            self.alu('SHL', operand_a, operand_b)
+            self.pc += 3
+
+        def SHR(operand_a, operand_b):
+            self.alu('SHR', operand_a, operand_b)
+            self.pc += 3
+
+        def MOD(operand_a, operand_b):
+            self.alu('MOD', operand_a, operand_b)
+            self.pc += 3
+
         # Used to stop running CPU
         def HLT(operand_a, operand_b):
             self.running = False
@@ -131,7 +159,14 @@ class CPU:
             0b10100111: CMP,
             0b01010100: JMP,
             0b01010101: JEQ,
-            0b01010110: JNE
+            0b01010110: JNE,
+            0b10101000: AND,
+            0b10101010: OR,
+            0b10101011: XOR,
+            0b01101001: NOT,
+            0b10101100: SHL,
+            0b10101101: SHR,
+            0b10100100: MOD,
         }
 
     def load(self):
@@ -181,11 +216,77 @@ class CPU:
             else:
                 self.fl = 0b00000000
 
+        def AND(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            and_result = a & b
+
+            self.reg[reg_a] = and_result
+
+        def OR(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            or_result = a | b
+
+            self.reg[reg_a] = or_result
+
+        def XOR(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            xor_result = a ^ b
+
+            self.reg[reg_a] = xor_result
+
+        def NOT(reg_a, reg_b):
+            a = self.reg[reg_a]
+
+            not_result = ~a
+
+            self.reg[reg_a] = not_result
+
+        def SHL(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            shl_result = a << b
+
+            self.reg[reg_a] = shl_result
+
+        def SHR(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            shr_result = a >> b
+
+            self.reg[reg_a] = shr_result
+
+        def MOD(reg_a, reg_b):
+            a = self.reg[reg_a]
+            b = self.reg[reg_b]
+
+            if b == 0:
+                self.running = False  # Halts the program
+                raise Exception("Cannot divide by 0.")
+
+            mod_result = a % b
+
+            self.reg[reg_a] = mod_result
+
         alu_opcodes = {
             'ADD': ADD,
             'SUB': SUB,
             'MUL': MUL,
-            'CMP': CMP
+            'CMP': CMP,
+            'AND': AND,
+            'OR': OR,
+            'XOR': XOR,
+            'NOT': NOT,
+            'SHL': SHL,
+            'SHR': SHR,
+            'MOD': MOD
         }
 
         alu_op = alu_opcodes[op]
