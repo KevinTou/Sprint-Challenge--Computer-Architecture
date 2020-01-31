@@ -77,6 +77,15 @@ class CPU:
             self.pc = self.ram[self.reg[self.SP]]
             self.reg[self.SP] += 1
 
+        def JMP(operand_a, operand_b):
+            pass
+
+        def JEQ(operand_a, operand_b):
+            pass
+
+        def JNE(operand_a, operand_b):
+            pass
+
         # Calls on ALU
         def MUL(operand_a, operand_b):
             self.alu('MUL', operand_a, operand_b)
@@ -89,6 +98,9 @@ class CPU:
         def SUB(operand_a, operand_b):
             self.alu('SUB', operand_a, operand_b)
             self.pc += 3
+
+        def CMP(operand_a, operand_b):
+            pass
 
         # Used to stop running CPU
         def HLT(operand_a, operand_b):
@@ -108,25 +120,17 @@ class CPU:
             0b01000101: PUSH,
             0b01000110: POP,
             0b01010000: CALL,
-            0b00010001: RET
+            0b00010001: RET,
+            0b10100111: CMP,
+            0b01010100: JMP,
+            0b01010101: JEQ,
+            0b01010110: JNE
         }
 
     def load(self):
         """Load a program into memory."""
 
         address = 0
-
-        # For now, we've just hardcoded a program:
-
-        # program = [
-        #     # From print8.ls8
-        #     0b10000010,  # LDI R0,8
-        #     0b00000000,
-        #     0b00001000,
-        #     0b01000111,  # PRN R0
-        #     0b00000000,
-        #     0b00000001,  # HLT
-        # ]
 
         program = []
 
@@ -155,10 +159,14 @@ class CPU:
         def SUB(reg_a, reg_b):
             self.reg[reg_a] -= self.reg[reg_b]
 
+        def CMP(reg_a, reg_b):
+            pass
+
         alu_opcodes = {
             'ADD': ADD,
             'SUB': SUB,
-            'MUL': MUL
+            'MUL': MUL,
+            'CMP': CMP
         }
 
         alu_op = alu_opcodes[op]
